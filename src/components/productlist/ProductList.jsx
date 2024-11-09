@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import './productlist.css';
 import Product from '../product/Product'
-import {removeItemFromCart,addItemToCart,increaseProdQtyInCart,deccreaseProdQtyInCart} from '../../reducers/CartReducer'
+import {removeItemFromCart,addItemToCart,increaseProdQtyInCart,deccreaseProdQtyInCart} from '../../slices/CartSlice'
 const ProductList = () => {
     const products = useSelector((state)=>state.products);
     return (

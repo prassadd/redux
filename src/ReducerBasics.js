@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import {createStore,combineReducers} from 'redux'
 import { productsList } from './productsList'
-import CartReducer from './reducers/CartReducer'
-import {removeItemFromCart,addItemToCart,increaseProdQtyInCart,deccreaseProdQtyInCart} from './reducers/CartReducer'
-import ProductsReducer from './reducers/ProductsReducer'
-import WishListReducer from './reducers/WishListReducer'
-import {addTOWishlist,removeFromWishlist} from './reducers/WishListReducer'
+import CartReducer from './slices/CartSlice'
+import {removeItemFromCart,addItemToCart,increaseProdQtyInCart,deccreaseProdQtyInCart} from './slices/CartSlice'
+import ProductsReducer from './slices/ProductsSlice'
+import WishListReducer from './slices/WishListSlice'
+import {addTOWishlist,removeFromWishlist} from './slices/WishListSlice'
 
 const reducer = combineReducers({
     products:ProductsReducer,
