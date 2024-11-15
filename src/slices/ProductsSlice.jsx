@@ -38,3 +38,16 @@ export const productsLoading = (state)=>state.products.isLoading;
 export const productsLoadingError = (state)=>state.products.error;
 // export default ProductsReducer;
 export default productSlice.reducer;
+
+export const getAllProducts = () => async (dispatch) => {
+    try{
+        const response = await fetch('https://fakestoreapi.com/products');
+        const data = await response.json()
+        console.log(data)
+        if(data){
+            dispatch(getProducts({data:data,isLoading:false}))
+        }
+    }catch(error){
+        dispatch(getProducts({error:error.message,isLoading:false}))
+    }
+}

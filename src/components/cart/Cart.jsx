@@ -1,24 +1,14 @@
 import { useSelector,useDispatch } from "react-redux";
 import { useEffect,useState } from "react";
 import {getProductList} from '../../slices/ProductsSlice'
-import {deccreaseProdQtyInCart,increaseProdQtyInCart,removeItemFromCart,getDefCart,getCartList} from '../../slices/CartSlice'
+import {deccreaseProdQtyInCart,increaseProdQtyInCart,removeItemFromCart,getCartList,getDefCartItems} from '../../slices/CartSlice'
 const Cart = () => {
     const cartItems = useSelector(getCartList)
     const products = useSelector(getProductList)
     const [cartItemsDisplay,setCartItemsDisplay] = useState([])
-
     const dispatch = useDispatch()
     useEffect(()=>{
-        const addDefCart = async () => {
-            try{
-                const response = await fetch('https://fakestoreapi.com/carts/1')
-                const data = await response.json();
-                dispatch(getDefCart({cartData:data.products}))
-            }catch(error){
-                console.log(error)
-            }
-        }
-        addDefCart()
+        dispatch(getDefCartItems())
         return;
     },[])
 
@@ -64,5 +54,6 @@ const CartItems = ({element,dispatch}) => {
             <p className="price">{total}</p>
             <button onClick={()=>dispatch(removeItemFromCart({productId}))}>Remove</button>
         </li>
+        // <h1>5</h1>
     )
 }

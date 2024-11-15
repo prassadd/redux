@@ -13,6 +13,7 @@ const cartSlice = createSlice({
     initialState:[],
     reducers:{
         getDefCart(state,action){
+            console.log(action)
             if(!state.length){
                 state = action.payload.cartData
             }
@@ -20,7 +21,6 @@ const cartSlice = createSlice({
         },
         addItemToCart(state,action){
             state = [...state,action.payload]
-            console.log(state)
             return state;
         },
         removeItemFromCart(state,action){
@@ -41,9 +41,21 @@ const cartSlice = createSlice({
 
 })
 export default cartSlice.reducer;
+
+//action creators
 export const  {addItemToCart,removeItemFromCart,deccreaseProdQtyInCart,increaseProdQtyInCart,getDefCart} = cartSlice.actions;
 export const getCartList = (state) => state.cart;
 
+//dispatch fn to get default cart
+export const getDefCartItems = () => async (dispatch) => {
+    try{
+        const response = await fetch('https://fakestoreapi.com/carts/1')
+        const data = await response.json();
+        dispatch(getDefCart({cartData:data.products}))
+    }catch(error){
+        console.log(error)
+    }
+}
 
 // const CartReducer = (state = [],action) => {
 //     return produce(state,(dummyState)=>{
