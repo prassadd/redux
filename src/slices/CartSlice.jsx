@@ -1,49 +1,79 @@
-const initialState = [];
-import {createSlice} from '@reduxjs/toolkit'
-//action types
-// const CART_ADD_ITEM =  'cart/addItem';   
-// const CART_REMOVE_ITEM =  'cart/removeItem';
-// const CART_INCREASE_QUANTITY = 'cart/increaseQuantity'  
-// const CART_DECREASE_QUANTITY = 'cart/decreaseQuantity' 
-import {produce} from 'immer'
-
+import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
+export const getDefCartItems = createAsyncThunk('cart/getDefCart',async (dispatch) => {
+    try{
+        const response = await fetch('https://fakestoreapi.com/carts/1')
+        const data = await response.json();
+        return data;
+    }catch(error){
+        return error
+    }
+})
 
 const cartSlice = createSlice({ 
     name:'cart',
-    initialState:[],
+    initialState:{
+        data:[],
+        isLoading:false,
+        error:null
+    },
     reducers:{
-        getDefCart(state,action){
-            if(!state.length){
-                state = action.payload.cartData
-            }
-            return state;
-        },
         addItemToCart(state,action){
-            state = [...state,action.payload]
-            console.log(state)
+            console.log()
+            state.data = [...state.data,action.payload]
             return state;
         },
         removeItemFromCart(state,action){
-            const itemIndex = state.findIndex((element,index) => element.productId === action.payload.productId)
-            state.splice(itemIndex,1)
+            const itemIndex = (state.data).findIndex((element,index) => element.productId === action.payload.productId)
+            state.data.splice(itemIndex,1)
         },
         increaseProdQtyInCart(state,action){
-            state.forEach((element,index) => {
+            state.data.forEach((element,index) => {
                 if(element.productId === action.payload.productId)  element.quantity += 1 
             })
         },
         deccreaseProdQtyInCart(state,action){
-            state.forEach((element,index) => {
+            state.data.forEach((element,index) => {
                 if(element.productId === action.payload.productId)  element.quantity -= 1 
             })
         }
+    },
+    extraReducers:(builder)=>{
+        builder
+        .addCase(getDefCartItems.pending,(state,action) => {
+            state.isLoading = true;
+            state.error = null;
+        })
+        .addCase(getDefCartItems.rejected,(state,action) => {
+            state.error = action.payload.message;
+            state.isLoading=false;
+        })
+        .addCase('cart/getDefCart/fulfilled',(state,action) => {
+            console.log(action)
+            state.error = action.payload.message;
+            state.data = action.payload.products;
+            state.isLoading= false;
+            console.log(state)
+        })
     }
 
 })
 export default cartSlice.reducer;
-export const  {addItemToCart,removeItemFromCart,deccreaseProdQtyInCart,increaseProdQtyInCart,getDefCart} = cartSlice.actions;
-export const getCartList = (state) => state.cart;
 
+//action creators
+export const  {addItemToCart,removeItemFromCart,deccreaseProdQtyInCart,increaseProdQtyInCart} = cartSlice.actions;
+export const getCartList = (state) => state.cart.data;
+export const  getCartLoadingError = (state) => state.cart.error;
+
+//dispatch fn to get default cart
+// export const getDefCartItems = () => async (dispatch) => {
+//     try{
+//         const response = await fetch('https://fakestoreapi.com/carts/1')
+//         const data = await response.json();
+//         dispatch(getDefCart({cartData:data.products}))
+//     }catch(error){
+//         console.log(error)
+//     }
+// }
 
 // const CartReducer = (state = [],action) => {
 //     return produce(state,(dummyState)=>{
