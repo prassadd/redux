@@ -1,6 +1,6 @@
 import {Outlet,NavLink} from 'react-router-dom';
 import {useSelector,useDispatch} from 'react-redux'
-import {getProducts,getAllProducts} from '../slices/ProductsSlice'
+import {getAllProducts} from '../slices/ProductsSlice'
 import { useEffect } from 'react';
 import {getCartList} from '../slices/CartSlice'
 const Layout = () => {
